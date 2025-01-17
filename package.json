@@ -1,0 +1,19 @@
+{
+  "name": "real-time-qa-upvote-platform",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:SadiqVali786/real-time-Q-A-upvote.git",
+  "author": "Sadiq Vali <rebirth4vali@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc -b & nodemon ./dist/index.js"
+  },
+  "dependencies": {
+    "typescript": "^5.7.3",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.13",
+    "nodemon": "^3.1.9"
+  }
+}
