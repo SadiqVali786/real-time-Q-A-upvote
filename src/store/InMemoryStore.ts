@@ -1,8 +1,8 @@
-import { ChatType, Store, UserIdType } from "./store/Store";
+import { ChatType, Store, UserIdType } from "./Store";
 
 let globalChatId = 0;
 
-type RoomType = {
+export type RoomType = {
   roomId: string;
   chats: ChatType[];
 };
@@ -28,24 +28,27 @@ export class InMemoryStore implements Store {
   addChat(roomId: string, userId: string, senderName: string, message: string) {
     const room = this.store.get(roomId);
     if (room) {
-      room.chats.push({
+      const chat = {
         id: (globalChatId++).toString(),
         userId,
         senderName,
         message,
         upvotes: [],
-      });
+      };
+      room.chats.push(chat);
+      return chat;
     }
+    return null;
   }
 
   upvote(roomId: string, userId: UserIdType, chatId: string) {
     const room = this.store.get(roomId);
-    if (room) {
-      // TODO: make this faster
-      const chat = room.chats.find(({ id }) => id === chatId);
-      if (chat) {
-        chat.upvotes.push(userId);
-      }
+    if (!room) return;
+    // TODO: make this faster
+    const chat = room.chats.find(({ id }) => id === chatId);
+    if (chat) {
+      chat.upvotes.push(userId);
     }
+    return chat;
   }
 }
