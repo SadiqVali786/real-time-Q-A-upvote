@@ -26,19 +26,22 @@ export class InMemoryStore implements Store {
   }
 
   addChat(roomId: string, userId: string, senderName: string, message: string) {
-    const room = this.store.get(roomId);
-    if (room) {
-      const chat = {
-        id: (globalChatId++).toString(),
-        userId,
-        senderName,
-        message,
-        upvotes: [],
-      };
-      room.chats.push(chat);
-      return chat;
+    if (!this.store.get(roomId)) {
+      this.initRoom(roomId);
     }
-    return null;
+    const room = this.store.get(roomId);
+    if (!room) {
+      return null;
+    }
+    const chat = {
+      id: (globalChatId++).toString(),
+      userId,
+      senderName,
+      message,
+      upvotes: [],
+    };
+    room.chats.push(chat);
+    return chat;
   }
 
   upvote(roomId: string, userId: UserIdType, chatId: string) {
@@ -47,6 +50,9 @@ export class InMemoryStore implements Store {
     // TODO: make this faster
     const chat = room.chats.find(({ id }) => id === chatId);
     if (chat) {
+      if (chat.upvotes.find((id) => id === userId)) {
+        return chat;
+      }
       chat.upvotes.push(userId);
     }
     return chat;

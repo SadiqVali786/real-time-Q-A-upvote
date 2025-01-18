@@ -26,6 +26,7 @@ wss.on("connection", function connection(ws) {
     // console.log("received: %s", data);
     try {
       messageHandler(ws, JSON.parse(data.toString()));
+      console.log("within the index.js ::: input message ", data.toString());
     } catch (error) {
       console.error(error);
     }
@@ -49,6 +50,8 @@ type IncomingMessageType =
     };
 
 const messageHandler = (ws: WebSocket, message: IncomingMessageType) => {
+  console.log("incoming message ", JSON.stringify(message));
+
   if (message.type === SupportedMessage.JoinRoom) {
     const payload = message.payload;
     userManager.addUser(payload.fullname, payload.userId, payload.roomId, ws);

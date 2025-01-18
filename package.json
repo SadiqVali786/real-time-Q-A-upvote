@@ -6,7 +6,7 @@
   "author": "Sadiq Vali <rebirth4vali@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc -b & nodemon ./dist/index.js"
+    "dev": "tsc -b --watch & nodemon ./dist/index.js"
   },
   "dependencies": {
     "typescript": "^5.7.3",

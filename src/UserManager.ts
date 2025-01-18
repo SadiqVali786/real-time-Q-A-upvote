@@ -1,8 +1,5 @@
 import { WebSocket } from "ws";
-import {
-  OutgoingMessageType,
-  SupportedOutgoingMessageTypes,
-} from "./messages/outgoingMessages";
+import { OutgoingMessageType } from "./messages/outgoingMessages";
 
 type User = {
   fullname: string;
@@ -26,9 +23,14 @@ export class UserManager {
       this.rooms.set(roomId, { users: [] });
     }
     this.rooms.get(roomId)?.users.push({ fullname, id: userId, socket });
+
+    socket.on("close", () => {
+      this.removeUser(roomId, userId);
+    });
   }
 
   removeUser(roomId: string, userId: string) {
+    console.log("removed user");
     let users = this.rooms.get(roomId)?.users;
     if (users) {
       users = users.filter(({ id }) => id !== userId);
@@ -46,13 +48,16 @@ export class UserManager {
       console.error("user not found");
       return;
     }
+
     const room = this.rooms.get(roomId);
     if (!room) {
       console.error("room not found");
       return;
     }
 
-    room.users.forEach(({ socket }) => {
+    console.log("outgoing message ", JSON.stringify(message));
+    room.users.forEach(({ socket, id }) => {
+      if (id === userId) return;
       socket.send(JSON.stringify(message));
     });
   }
